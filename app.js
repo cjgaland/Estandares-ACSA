@@ -6,7 +6,8 @@
 /* jshint esversion: 6 */
 /* global STANDARDS, REQ_CIFRADO */
 
-const APP_VERSION = '2.0';
+const APP_VERSION = '2.1';
+const APP_NOVEDAD = 'El acceso a los <em>Requisitos de Evaluación</em> (reservado a evaluadores de la ACSA) está ahora en una pestaña plegable dentro de cada estándar.';
 
 'use strict';
 
@@ -162,15 +163,21 @@ function buildCard(s) {
       <button class="req-lock-btn" data-action="lock" data-code="${esc(s.codigo)}" title="Volver a ocultar los requisitos">🔒 Ocultar</button>
     </div>
     <div class="req-list">${reqHtml}</div>` : (REQ.disponible ? '' : `
-    <div class="req-locked">
-      <div class="section-title">🔒 Requisitos de Evaluación</div>
-      <p class="req-locked-text">Contenido reservado a evaluadores de la ACSA, sujeto a acuerdo de confidencialidad.</p>
-      <div class="req-locked-form">
-        <input type="password" class="req-pwd" placeholder="Contraseña de evaluador" autocomplete="off" aria-label="Contraseña de evaluador">
-        <button class="req-unlock-btn" data-action="unlock" data-code="${esc(s.codigo)}">Desbloquear</button>
+    <details class="req-locked">
+      <summary class="req-tab" title="Reservado a evaluadores de la ACSA">
+        <svg class="req-tab-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Requisitos de evaluación
+        <svg class="req-tab-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+      </summary>
+      <div class="req-locked-body">
+        <p class="req-locked-text">Reservado a evaluadores de la ACSA.</p>
+        <div class="req-locked-form">
+          <input type="password" class="req-pwd" placeholder="Contraseña de evaluador" autocomplete="off" aria-label="Contraseña de evaluador">
+          <button class="req-unlock-btn" data-action="unlock" data-code="${esc(s.codigo)}">Acceder</button>
+        </div>
+        <div class="req-locked-msg" aria-live="polite"></div>
       </div>
-      <div class="req-locked-msg" aria-live="polite"></div>
-    </div>`)}
+    </details>`)}
   </div>
 </div>`;
 }
@@ -702,6 +709,13 @@ function bloquearRequisitos() {
   showToast('🔒 Requisitos ocultados');
 }
 
+document.getElementById('cardGrid').addEventListener('toggle', e => {
+  if (e.target.classList && e.target.classList.contains('req-locked') && e.target.open) {
+    const inp = e.target.querySelector('.req-pwd');
+    if (inp) inp.focus();
+  }
+}, true);
+
 document.getElementById('cardGrid').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.classList.contains('req-pwd')) {
     e.preventDefault();
@@ -754,8 +768,7 @@ function mostrarBanner(id, html, botones) {
   try { previa = localStorage.getItem(VERSION_STORAGE_KEY); } catch (e) { return; }
   if (previa === APP_VERSION) return;
   mostrarBanner('bannerActualizada',
-    '<strong>✅ La aplicación se ha actualizado (versión ' + APP_VERSION + ').</strong><br>' +
-    'Los <em>Requisitos de Evaluación</em> quedan reservados a evaluadores de la ACSA y requieren contraseña.',
+    '<strong>✅ La aplicación se ha actualizado (versión ' + APP_VERSION + ').</strong><br>' + APP_NOVEDAD,
     [{ texto: 'Entendido', accion: () => { try { localStorage.setItem(VERSION_STORAGE_KEY, APP_VERSION); } catch (e) { /* nada */ } } }]);
 })();
 

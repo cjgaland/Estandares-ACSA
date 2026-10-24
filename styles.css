@@ -915,21 +915,54 @@ mark {
 @media (max-width: 600px) {
   .ugc-est-badge { font-size: 11px; padding: 3px 8px; }
 }
-/* ══════════════ REQUISITOS RESTRINGIDOS ══════════════ */
-.req-locked {
-  margin-top: 6px;
-  padding: 14px 16px;
-  border: 1.5px dashed var(--purple);
-  border-radius: var(--radius-sm);
-  background: var(--purple-light);
+/* ══════════════ REQUISITOS RESTRINGIDOS (pestaña discreta) ══════════════ */
+.req-locked { margin-top: 18px; }
+.req-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color .15s, border-color .15s, background .15s;
 }
-.req-locked .section-title { margin-top: 0; }
-.req-locked-text { font-size: 13px; color: var(--text2); margin: 4px 0 10px; }
+.req-tab::-webkit-details-marker { display: none; }
+.req-tab::marker { content: ''; }
+.req-tab:hover { color: var(--purple); border-color: var(--purple); }
+.req-tab:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+.req-tab-chev { transition: transform .2s; }
+.req-locked[open] .req-tab {
+  color: var(--purple);
+  border-color: var(--purple);
+  background: var(--purple-light);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.req-locked[open] .req-tab-chev { transform: rotate(90deg); }
+.req-locked[open] .req-tab { position: relative; z-index: 1; margin-bottom: -1px; border-bottom-color: var(--purple-light); }
+.req-locked-body {
+  padding: 12px 14px;
+  border: 1px solid var(--purple);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+  background: var(--surface);
+  animation: reqOpen .18s ease-out;
+}
+@keyframes reqOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.req-locked-text { font-size: 12px; color: var(--text3); margin: 0 0 8px; }
 .req-locked-form { display: flex; gap: 8px; flex-wrap: wrap; }
 .req-pwd {
-  flex: 1 1 200px;
+  flex: 1 1 180px;
   min-width: 0;
-  padding: 9px 12px;
+  max-width: 320px;
+  padding: 7px 11px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -937,20 +970,21 @@ mark {
   font: inherit;
   font-size: 16px; /* evita el zoom automático en iOS */
 }
-.req-pwd:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(92,45,122,.18); }
+.req-pwd:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(92,45,122,.15); }
 .req-unlock-btn {
-  padding: 9px 18px;
+  padding: 7px 16px;
   border: none;
   border-radius: var(--radius-sm);
   background: var(--purple);
   color: #fff;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
 .req-unlock-btn:hover { filter: brightness(1.1); }
-.req-locked-msg { min-height: 18px; margin-top: 8px; font-size: 13px; color: var(--text2); }
+.req-locked-msg { min-height: 16px; margin-top: 6px; font-size: 12px; color: var(--text2); }
+.req-locked-msg:empty { min-height: 0; margin-top: 0; }
 .req-locked-msg.error { color: var(--red); font-weight: 600; }
 .req-title-open { display: flex; align-items: center; gap: 10px; }
 .req-lock-btn {
